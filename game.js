@@ -40,9 +40,7 @@ gameLoop();
 // Implementation
 // =================================================
 function initGame() {
-  player.x = canvas.width / 2 -  player.width  / 2;
-  player.y = canvas.height -  player.height - 20;
-  randomizeBlockPos();
+  resetGame();
   createBgLines();
 }
 
@@ -50,34 +48,6 @@ function gameLoop() {
   update();
   draw();
   requestAnimationFrame(gameLoop);
-}
-
-function checkInput(event) {
-  var key_state = (event.type == "keydown") ? true : false;
-
-  switch(event.keyCode) {
-    case 37:// left key
-      KEYS.left = key_state;
-      console.log("LEFT");
-    break;
-    case 39:// right key
-      KEYS.right = key_state;
-      console.log("RIGHT");
-    break;
-  }
-}
-
-function randomizeBlockPos() {
-  block.x = Math.floor(Math.random() * canvas.width / 2);
-  block.y = -block.height;
-}
-
-function createBgLines() {
-  let offset = 0;
-  for (let i = 0; i < 6; i++) {
-    LINES.push(new Line(offset));
-    offset += canvas.height / 6;
-  }
 }
 
 function draw() {
@@ -108,6 +78,9 @@ function draw() {
 }
 
 function update() {
+
+  checkCollisions();
+
   if (KEYS.left) {
     console.log("LEFT");
     player.velocity -= 5.35;
@@ -146,5 +119,49 @@ function update() {
   }
   for (line of LINES) {
     line.y++;
+  }
+}
+
+function resetGame() {
+  player.x = canvas.width / 2 -  player.width  / 2;
+  player.y = canvas.height -  player.height - 20;
+  randomizeBlockPos();
+}
+
+function checkInput(event) {
+  var key_state = (event.type == "keydown") ? true : false;
+
+  switch(event.keyCode) {
+    case 37:// left key
+      KEYS.left = key_state;
+      console.log("LEFT");
+    break;
+    case 39:// right key
+      KEYS.right = key_state;
+      console.log("RIGHT");
+    break;
+  }
+}
+
+function randomizeBlockPos() {
+  block.x = Math.floor(Math.random() * canvas.width / 2);
+  block.y = -block.height;
+}
+
+function createBgLines() {
+  let offset = 0;
+  for (let i = 0; i < 6; i++) {
+    LINES.push(new Line(offset));
+    offset += canvas.height / 6;
+  }
+}
+function checkCollisions() {
+  // We only need to check for collision if the block is
+  // within in the players range
+  if (block.y > player.y) {
+    if (player.x + player.width > block.x && player.x < block.x + block.width) {
+      console.log("x collision");
+      resetGame();
+    }
   }
 }
