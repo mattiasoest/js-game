@@ -1,6 +1,15 @@
 var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
+var ctx    = canvas.getContext("2d");
+
+window.addEventListener("keydown", checkInput)
+window.addEventListener("keyup", checkInput);
+
+// CONSTANS
+// =================================================
 const BLOCK_HEIGHT = 40;
+const LINES        = [];
+const KEYS         = {left : false, right : false};
+
 var player = {
   width : 20,
   height : 30,
@@ -23,11 +32,25 @@ function Line(y) {
   this.height = 2;
 }
 
-const LINES = [];
-const KEYS = {left : false, right : false};
+// Start the game
+// =================================================
+initGame();
+gameLoop();
+// =================================================
+// Implementation
+// =================================================
+function initGame() {
+  player.x = canvas.width / 2 -  player.width  / 2;
+  player.y = canvas.height -  player.height - 20;
+  randomizeBlockPos();
+  createBgLines();
+}
 
-window.addEventListener("keydown", checkInput)
-window.addEventListener("keyup", checkInput);
+function gameLoop() {
+  update();
+  draw();
+  requestAnimationFrame(gameLoop);
+}
 
 function checkInput(event) {
   var key_state = (event.type == "keydown") ? true : false;
@@ -59,9 +82,11 @@ function createBgLines() {
 
 function draw() {
   //Background
+  // =================================================
   ctx.fillStyle = "#000000";
   ctx.fillRect(0,0, canvas.width, canvas.height);
   // Lines for background parallax
+  // =================================================
   ctx.fillStyle = "grey";
   for (line of LINES) {
     ctx.beginPath();
@@ -69,12 +94,13 @@ function draw() {
     ctx.fill();
   }
   // Player
+  // =================================================
   ctx.fillStyle = "#ff0000";
   ctx.beginPath();
   ctx.rect(player.x, player.y, player.width, player.height);
   ctx.fill();
-
   // Block
+  // =================================================
   ctx.fillStyle = "blue";
   ctx.beginPath();
   ctx.rect(block.x, block.y, block.width, block.height);
@@ -91,6 +117,7 @@ function update() {
     player.velocity += 5.35;
   }
   // Player
+  // =================================================
   player.x += player.velocity;
   player.velocity *= 0.75;
 
@@ -102,13 +129,14 @@ function update() {
     player.x = canvas.width - player.width;
     player.velocity = 0;
   }
-
-
+  // Block
+  // =================================================
   if (block.y > canvas.height) {
     randomizeBlockPos();
   }
   block.y += 14;
-
+  // LINES
+  // =================================================
   // The first pushed element is out of the map
   // reuse it!
   if (LINES[LINES.length - 1].y > canvas.height) {
@@ -120,21 +148,3 @@ function update() {
     line.y++;
   }
 }
-
-function initGame() {
-  player.x = canvas.width / 2 -  player.width  / 2;
-  player.y = canvas.height -  player.height - 20;
-  randomizeBlockPos();
-  createBgLines();
-}
-
-function gameLoop() {
-  update();
-  draw();
-  requestAnimationFrame(gameLoop);
-}
-
-// START THE GAME
-// =================================================
-initGame();
-gameLoop();
