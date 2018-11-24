@@ -161,7 +161,7 @@ function updateBlock() {
     SCORE++;
     randomizeBlockPos();
   }
-  block.y += 14;
+  block.y += 15;
 }
 
 function updateLines() {
