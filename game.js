@@ -9,7 +9,9 @@ window.addEventListener("keyup", checkInput);
 const BLOCK_HEIGHT = 40;
 const LINES        = [];
 const KEYS         = {left : false, right : false};
+const STATES        = {RUNNING : 0, MENU : 1};
 
+var GAME_STATE = STATES.MENU;
 var player = {
   width : 20,
   height : 30,
@@ -78,19 +80,30 @@ function draw() {
 }
 
 function update() {
-
-  checkCollisions();
-
-  if (KEYS.left) {
-    console.log("LEFT");
-    player.velocity -= 5.35;
+  // Update the parallax no matter what
+  updateLines();
+  switch (GAME_STATE) {
+    case STATES.RUNNING:
+      if (KEYS.left) {
+        console.log("LEFT");
+        player.velocity -= 5.35;
+      }
+      else if (KEYS.right) {
+        console.log("RIGHT");
+        player.velocity += 5.35;
+      }
+      updateBlock();
+      updatePlayer();
+      checkCollisions();
+      break;
+    case STATES.MENU:
+      break;
+    default:
+      break;
   }
-  else if (KEYS.right) {
-    console.log("RIGHT");
-    player.velocity += 5.35;
-  }
-  // Player
-  // =================================================
+}
+
+function updatePlayer() {
   player.x += player.velocity;
   player.velocity *= 0.75;
 
@@ -102,14 +115,16 @@ function update() {
     player.x = canvas.width - player.width;
     player.velocity = 0;
   }
-  // Block
-  // =================================================
+}
+
+function updateBlock() {
   if (block.y > canvas.height) {
     randomizeBlockPos();
   }
   block.y += 14;
-  // LINES
-  // =================================================
+}
+
+function updateLines() {
   // The first pushed element is out of the map
   // reuse it!
   if (LINES[LINES.length - 1].y > canvas.height) {
@@ -123,6 +138,7 @@ function update() {
 }
 
 function resetGame() {
+  GAME_STATE = STATES.MENU;
   player.x = canvas.width / 2 -  player.width  / 2;
   player.y = canvas.height -  player.height - 20;
   randomizeBlockPos();
@@ -130,7 +146,9 @@ function resetGame() {
 
 function checkInput(event) {
   var key_state = (event.type == "keydown") ? true : false;
-
+  if (key_state && GAME_STATE === STATES.MENU) {
+    GAME_STATE = STATES.RUNNING;
+  }
   switch(event.keyCode) {
     case 37:// left key
       KEYS.left = key_state;
