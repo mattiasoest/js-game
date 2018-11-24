@@ -12,6 +12,7 @@ const KEYS         = {left : false, right : false};
 const STATES        = {RUNNING : 0, MENU : 1};
 
 var GAME_STATE = STATES.MENU;
+var SCORE      = 0;
 var player = {
   width : 20,
   height : 30,
@@ -55,6 +56,7 @@ function gameLoop() {
 function draw() {
   drawBackground();
   drawPlayer();
+  drawScore();
   switch (GAME_STATE) {
     case STATES.RUNNING:
       drawBlocks();
@@ -91,6 +93,7 @@ function update() {
 }
 
 function resetGame() {
+  SCORE = 0;
   GAME_STATE = STATES.MENU;
   player.x = canvas.width / 2 -  player.width  / 2;
   player.y = canvas.height -  player.height - 20;
@@ -156,6 +159,7 @@ function updatePlayer() {
 
 function updateBlock() {
   if (block.y > canvas.height) {
+    SCORE++;
     randomizeBlockPos();
   }
   block.y += 14;
@@ -207,4 +211,10 @@ function drawStartText() {
   ctx.fillStyle = "white";
   ctx.font = "30px Verdana";
   ctx.fillText("Press any button to start!", 5, canvas.height / 2);
+}
+
+function drawScore() {
+  ctx.fillStyle = "white";
+  ctx.font = "20px Verdana";
+  ctx.fillText("Score: " + SCORE, 5, 25);
 }
