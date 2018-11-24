@@ -4,13 +4,15 @@ var ctx    = canvas.getContext("2d");
 window.addEventListener("keydown", checkInput)
 window.addEventListener("keyup", checkInput);
 
-// CONSTANS
+// CONSTANTS
 // =================================================
 const BLOCK_HEIGHT = 40;
 const LINES        = [];
 const KEYS         = {left : false, right : false};
-const STATES        = {RUNNING : 0, MENU : 1};
+const STATES       = {RUNNING : 0, MENU : 1};
 
+// normal global variables
+// =================================================
 var GAME_STATE = STATES.MENU;
 var SCORE      = 0;
 var player = {
