@@ -13,6 +13,12 @@ const STATES       = {RUNNING : 0, MENU : 1};
 
 // normal global variables
 // =================================================
+
+var startGame = new Audio();
+var score_1   = new Audio();
+var score_2   = new Audio();
+var gameOver  = new Audio();
+
 var GAME_STATE = STATES.MENU;
 var SCORE      = 0;
 var player = {
@@ -45,6 +51,7 @@ gameLoop();
 // Implementation
 // =================================================
 function initGame() {
+  loadSound();
   resetGame();
   createBgLines();
 }
@@ -105,16 +112,15 @@ function resetGame() {
 function checkInput(event) {
   var key_state = (event.type == "keydown") ? true : false;
   if (key_state && GAME_STATE === STATES.MENU) {
+    startGame.play();
     GAME_STATE = STATES.RUNNING;
   }
   switch(event.keyCode) {
-    case 37:// left key
+    case 37:
       KEYS.left = key_state;
-      console.log("LEFT");
     break;
-    case 39:// right key
+    case 39:
       KEYS.right = key_state;
-      console.log("RIGHT");
     break;
   }
 }
@@ -137,9 +143,20 @@ function checkCollisions() {
   // within in the players range
   if (block.y + block.height > player.y) {
     if (player.x + player.width > block.x && player.x < block.x + block.width) {
+      gameOver.play();
       resetGame();
     }
   }
+}
+
+function loadSound() {
+  startGame.src = "sounds/start_game.wav";
+  score_1.src   = "sounds/point_1.wav";
+  score_2.src   = "sounds/point_2.wav";
+  gameOver.src  = "sounds/explosion.wav";
+
+  // Adjust one of the score sounds
+  score_2.volume = 0.35;
 }
 
 // Update helpers
@@ -161,6 +178,7 @@ function updatePlayer() {
 function updateBlock() {
   if (block.y > canvas.height) {
     SCORE++;
+    SCORE % 2 === 0 ? score_1.play() : score_2.play();
     randomizeBlockPos();
   }
   block.y += 15;
