@@ -204,8 +204,8 @@ function drawBackground() {
   ctx.fillStyle = "#000000";
   ctx.fillRect(0,0, canvas.width, canvas.height);
   // bg lines for background parallax effect
-  ctx.fillStyle = "grey";
   for (line of LINES) {
+    ctx.fillStyle = "#A9A9A9";
     ctx.beginPath();
     ctx.rect(line.x, line.y, line.width, line.height);
     ctx.fill();
