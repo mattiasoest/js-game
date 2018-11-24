@@ -53,30 +53,18 @@ function gameLoop() {
 }
 
 function draw() {
-  //Background
-  // =================================================
-  ctx.fillStyle = "#000000";
-  ctx.fillRect(0,0, canvas.width, canvas.height);
-  // Lines for background parallax
-  // =================================================
-  ctx.fillStyle = "grey";
-  for (line of LINES) {
-    ctx.beginPath();
-    ctx.rect(line.x, line.y, line.width, line.height);
-    ctx.fill();
+
+  drawBackground();
+  drawPlayer();
+  switch (GAME_STATE) {
+    case STATES.RUNNING:
+      drawBlocks();
+      break;
+      case STATES.MENU:
+        drawStartText();
+        break;
+    default:
   }
-  // Player
-  // =================================================
-  ctx.fillStyle = "#ff0000";
-  ctx.beginPath();
-  ctx.rect(player.x, player.y, player.width, player.height);
-  ctx.fill();
-  // Block
-  // =================================================
-  ctx.fillStyle = "blue";
-  ctx.beginPath();
-  ctx.rect(block.x, block.y, block.width, block.height);
-  ctx.fill();
 }
 
 function update() {
@@ -182,4 +170,39 @@ function checkCollisions() {
       resetGame();
     }
   }
+}
+
+function drawBackground() {
+  //Background
+  // =================================================
+  ctx.fillStyle = "#000000";
+  ctx.fillRect(0,0, canvas.width, canvas.height);
+  // Lines for background parallax
+  // =================================================
+  ctx.fillStyle = "grey";
+  for (line of LINES) {
+    ctx.beginPath();
+    ctx.rect(line.x, line.y, line.width, line.height);
+    ctx.fill();
+  }
+}
+
+function drawPlayer() {
+  ctx.fillStyle = "#ff0000";
+  ctx.beginPath();
+  ctx.rect(player.x, player.y, player.width, player.height);
+  ctx.fill();
+}
+
+function drawBlocks() {
+  ctx.fillStyle = "blue";
+  ctx.beginPath();
+  ctx.rect(block.x, block.y, block.width, block.height);
+  ctx.fill();
+}
+
+function drawStartText() {
+  ctx.fillStyle = "white";
+  ctx.font = "30px Verdana";
+  ctx.fillText("Press any button to start!", 5, canvas.height / 2);
 }
