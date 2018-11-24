@@ -133,9 +133,8 @@ function createBgLines() {
 function checkCollisions() {
   // We only need to check for collision if the block is
   // within in the players range
-  if (block.y > player.y) {
+  if (block.y + block.height > player.y) {
     if (player.x + player.width > block.x && player.x < block.x + block.width) {
-      console.log("x collision");
       resetGame();
     }
   }
