@@ -21,6 +21,9 @@ var gameOver  = new Audio();
 
 var GAME_STATE = STATES.MENU;
 var SCORE      = 0;
+
+var localStorage = window.localStorage;
+var highscore = localStorage.getItem("score") ? localStorage.getItem("score") : 0;
 var player = {
   width : 20,
   height : 30,
@@ -66,6 +69,7 @@ function draw() {
   drawBackground();
   drawPlayer();
   drawScore();
+  drawHighscore();
   switch (GAME_STATE) {
     case STATES.RUNNING:
       drawBlocks();
@@ -83,11 +87,9 @@ function update() {
   switch (GAME_STATE) {
     case STATES.RUNNING:
       if (KEYS.left) {
-        console.log("LEFT");
         player.velocity -= 5.35;
       }
       else if (KEYS.right) {
-        console.log("RIGHT");
         player.velocity += 5.35;
       }
       updateBlock();
@@ -144,6 +146,12 @@ function checkCollisions() {
   if (block.y + block.height > player.y) {
     if (player.x + player.width > block.x && player.x < block.x + block.width) {
       gameOver.play();
+      if (SCORE > localStorage.getItem("score")) {
+        // Save score in the browser.
+        localStorage.setItem("score", SCORE);
+        highscore = SCORE;
+        console.log("New highscore! " + SCORE);
+      }
       resetGame();
     }
   }
@@ -235,5 +243,12 @@ function drawStartText() {
 function drawScore() {
   ctx.fillStyle = "white";
   ctx.font = "20px Verdana";
-  ctx.fillText("Score: " + SCORE, 5, 25);
+  ctx.fillText("Score: " + SCORE, 5, 65);
+}
+
+
+function drawHighscore() {
+  ctx.fillStyle = "white";
+  ctx.font = "20px Verdana";
+  ctx.fillText("High Score: " + highscore, 5, 25);
 }
