@@ -53,16 +53,15 @@ function gameLoop() {
 }
 
 function draw() {
-
   drawBackground();
   drawPlayer();
   switch (GAME_STATE) {
     case STATES.RUNNING:
       drawBlocks();
       break;
-      case STATES.MENU:
-        drawStartText();
-        break;
+    case STATES.MENU:
+      drawStartText();
+      break;
     default:
   }
 }
@@ -88,40 +87,6 @@ function update() {
       break;
     default:
       break;
-  }
-}
-
-function updatePlayer() {
-  player.x += player.velocity;
-  player.velocity *= 0.75;
-
-  if (player.x < 0) {
-    player.x = 0;
-    player.velocity = 0;
-  }
-  else if (player.x > canvas.width - player.width) {
-    player.x = canvas.width - player.width;
-    player.velocity = 0;
-  }
-}
-
-function updateBlock() {
-  if (block.y > canvas.height) {
-    randomizeBlockPos();
-  }
-  block.y += 14;
-}
-
-function updateLines() {
-  // The first pushed element is out of the map
-  // reuse it!
-  if (LINES[LINES.length - 1].y > canvas.height) {
-    let line = LINES.pop();
-    line.y = 0;
-    LINES.unshift(line);
-  }
-  for (line of LINES) {
-    line.y++;
   }
 }
 
@@ -161,6 +126,7 @@ function createBgLines() {
     offset += canvas.height / 6;
   }
 }
+
 function checkCollisions() {
   // We only need to check for collision if the block is
   // within in the players range
@@ -172,13 +138,49 @@ function checkCollisions() {
   }
 }
 
+// Update helpers
+// =================================================
+function updatePlayer() {
+  player.x += player.velocity;
+  player.velocity *= 0.75;
+
+  if (player.x < 0) {
+    player.x = 0;
+    player.velocity = 0;
+  }
+  else if (player.x > canvas.width - player.width) {
+    player.x = canvas.width - player.width;
+    player.velocity = 0;
+  }
+}
+
+function updateBlock() {
+  if (block.y > canvas.height) {
+    randomizeBlockPos();
+  }
+  block.y += 14;
+}
+
+function updateLines() {
+  // The first pushed element is out of the map
+  // reuse it!
+  if (LINES[LINES.length - 1].y > canvas.height) {
+    let line = LINES.pop();
+    line.y = 0;
+    LINES.unshift(line);
+  }
+  for (line of LINES) {
+    line.y++;
+  }
+}
+
+// Draw helpers
+// =================================================
 function drawBackground() {
   //Background
-  // =================================================
   ctx.fillStyle = "#000000";
   ctx.fillRect(0,0, canvas.width, canvas.height);
-  // Lines for background parallax
-  // =================================================
+  // bg lines for background parallax effect
   ctx.fillStyle = "grey";
   for (line of LINES) {
     ctx.beginPath();
