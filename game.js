@@ -164,7 +164,10 @@ function loadSound() {
   gameOver.src  = "sounds/explosion.wav";
 
   // Adjust one of the score sounds
-  score_2.volume = 0.35;
+  startGame.volume = 0.2;
+  score_1.volume = 0.1;
+  score_2.volume = 0.05;
+  gameOver.volume = 0.2;
 }
 
 // Update helpers
