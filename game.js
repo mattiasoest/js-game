@@ -39,11 +39,13 @@ var block = {
   height : BLOCK_HEIGHT
 };
 
-function Line(y) {
-  this.x = 0;
-  this.y = y;
-  this.width = canvas.width;
-  this.height = 2;
+class Line {
+  constructor(y) {
+    this.x = 0;
+    this.y = y;
+    this.width = canvas.width;
+    this.height = 2;
+  }
 }
 
 // Start the game
