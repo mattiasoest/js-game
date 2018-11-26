@@ -11,9 +11,8 @@ const LINES        = [];
 const KEYS         = {left : false, right : false};
 const STATES       = {RUNNING : 0, MENU : 1};
 
-// normal global variables
+// Normal global variables
 // =================================================
-
 var startGame = new Audio();
 var score_1   = new Audio();
 var score_2   = new Audio();
@@ -99,6 +98,7 @@ function update() {
       checkCollisions();
       break;
     case STATES.MENU:
+      // TODO add something fun?
       break;
     default:
       break;
@@ -165,7 +165,7 @@ function loadSound() {
   score_2.src   = "sounds/point_2.wav";
   gameOver.src  = "sounds/explosion.wav";
 
-  // Adjust one of the score sounds
+  // Adjust the volumes
   startGame.volume = 0.2;
   score_1.volume = 0.1;
   score_2.volume = 0.05;
@@ -198,8 +198,8 @@ function updateBlock() {
 }
 
 function updateLines() {
-  // The first pushed element is out of the map
-  // reuse it!
+  // The first pushed element is out of the map.
+  // Reuse the same Line object for effiency.
   if (LINES[LINES.length - 1].y > canvas.height) {
     let line = LINES.pop();
     line.y = 0;
